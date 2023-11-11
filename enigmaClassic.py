@@ -100,20 +100,19 @@ if __name__ == "__main__":
 
     # Configuration des rotors (demandez à l'utilisateur ou fixez-les comme vous le souhaitez)
     # Vous pouvez demander à l'utilisateur de saisir les positions initiales des rotors ici si vous le souhaitez
-    rotor_positions = input("Entrez les positions initiales des trois rotors (par exemple, 'A B C' pour les positions 0, 1, 2): ").upper().split()
+    rotor_positions = input(colored("\nEntrez les positions initiales des trois rotors (par exemple, 'A B C' pour les positions 0, 1, 2): \n","yellow")).upper().split()
     if len(rotor_positions) == 3:
         rotor_I.position = ord(rotor_positions[0]) - ord('A')
         rotor_II.position = ord(rotor_positions[1]) - ord('A')
         rotor_III.position = ord(rotor_positions[2]) - ord('A')
     else:
-        print("Positions des rotors invalides. Utilisation des positions par défaut 'A B C'.")
+        print_red("Positions des rotors invalides. Utilisation des positions par défaut 'A B C'.")
         rotor_I.position = 0
         rotor_II.position = 0
         rotor_III.position = 0
 
     # Encodage et affichage du message codé
     processed_message = encode_message(original_message, rotor_I, rotor_II, rotor_III)
-    print(f"Message codé: {processed_message}")
 
     # Optionnel: démonstration du décodage si nécessaire
     # Si vous voulez montrer le décodage directement après, décommentez le code suivant:
