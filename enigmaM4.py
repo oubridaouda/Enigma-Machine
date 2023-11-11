@@ -1,4 +1,11 @@
 import time
+import pyfiglet
+from termcolor import colored, cprint
+
+print_yellow = lambda x: cprint(x, 'yellow')
+print_red = lambda x: cprint(x, 'red')
+print_green = lambda x: cprint(x, 'green')
+
 # ... (Les classes et fonctions précédentes restent inchangées)
 
 class EnigmaM4:
@@ -83,27 +90,56 @@ enigma_M4 = EnigmaM4(rotor_I, rotor_II, rotor_III, rotor_IV, reflector_B_thin, p
 
 # Exemple d'utilisation
 if __name__ == "__main__":
-    # Demander à l'utilisateur de saisir un message
-    original_message = input("Entrez le message à chiffrer ou déchiffrer: ")
+    
+    print(colored(pyfiglet.figlet_format("ENIGMA M 4"),'red'))
+    
+    print_yellow("1. Chiffrer")
+    print_yellow("2. Déchiffrer")
+    choice = input("\nChoisissez une option (1 ou 2): ")
+    
+    # Validation de l'entrée de l'utilisateur pour le choix de l'opération
+    if choice not in ('1', '2'):
+        print_red("\nChoix invalide. Veuillez entrer '1' pour chiffrer ou '2' pour déchiffrer.\n")
+        exit()
+    else:
+        # Demander à l'utilisateur de saisir un message
+        if choice == '1':
+            original_message = input(colored("\nEntrez le message à chiffrer: \n","yellow"))
+        if choice == '2':
+            original_message = input(colored("\nEntrez le message à déchiffrer: \n","yellow"))
     
     # Saisir les positions initiales des rotors pour la machine Enigma M4
-    rotor_positions = input("Entrez les positions initiales des quatre rotors (par exemple, 'A B C D'): ").upper().split()
+    rotor_positions = input(colored("\nEntrez les positions initiales des quatre rotors (par exemple, 'A B C D'): \n","yellow")).upper().split()
     if len(rotor_positions) == 4:
         rotor_IV.position = ord(rotor_positions[0]) - ord('A')
         rotor_III.position = ord(rotor_positions[1]) - ord('A')
         rotor_II.position = ord(rotor_positions[2]) - ord('A')
         rotor_I.position = ord(rotor_positions[3]) - ord('A')
     else:
-        print("Positions des rotors invalides. Utilisation des positions par défaut 'A B C D'.")
+        print_red("\nPositions des rotors invalides. Utilisation des positions par défaut 'A B C D'.")
+        exit()
 
     # Mesurer le temps de début
     start_time = time.time()
 
     # Chiffrer le message
-    encoded_message = enigma_M4.encode(original_message)
+    processed_message = enigma_M4.encode(original_message)
     
     # Mesurer le temps de fin
     end_time = time.time()
-
-    print(f"Message codé: {encoded_message}")
-    print(f"Le codage/décodage a pris {(end_time - start_time) * 1000:.2f} millisecondes.")
+    
+    # Afficher le message traité en fonction du choix
+    if choice == '1':
+        print_yellow("\nMessage chiffré: ")
+        print(processed_message)
+        
+        #Affiche le nombre de temp que le chiffrement a pris
+        print("\n")
+        print_green(f"Le chiffrement a pris {(end_time - start_time) * 1000:.2f} millisecondes.")
+    else:
+        print_yellow("\nMessage déchiffré: ")
+        print(processed_message)
+        
+        #Affiche le nombre de temp que le déchiffrement a pris
+        print("\n")
+        print_green(f"Le déchiffrement a pris {(end_time - start_time) * 1000:.2f} millisecondes.")
