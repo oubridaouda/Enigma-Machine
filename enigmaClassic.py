@@ -1,3 +1,11 @@
+import time
+import pyfiglet
+from termcolor import colored, cprint
+
+print_yellow = lambda x: cprint(x, 'yellow')
+print_red = lambda x: cprint(x, 'red')
+print_green = lambda x: cprint(x, 'green')
+
 # Définition du tableau de connexions (Steckerbrett)
 def steckerbrett(letter):
     steckerbrett_config = {
@@ -48,7 +56,7 @@ def encode_letter(letter, rotor1, rotor2, rotor3):
 
 # Fonction d'encodage pour un message entier
 def encode_message(message, rotor1, rotor2, rotor3):
-    encoded_message = ''
+    processed_message = ''
     message = message.upper()
 
     for letter in message:
@@ -58,11 +66,11 @@ def encode_message(message, rotor1, rotor2, rotor3):
                     rotor3.step()
 
             encoded_letter = encode_letter(letter, rotor1, rotor2, rotor3)
-            encoded_message += encoded_letter
+            processed_message += encoded_letter
         else:
-            encoded_message += letter
+            processed_message += letter
 
-    return encoded_message
+    return processed_message
 
 # Configuration initiale des rotors
 rotor_I = Rotor('EKMFLGDQVZNTOWYHXUSPAIBRCJ', 17)
@@ -71,8 +79,24 @@ rotor_III = Rotor('BDFHJLCPRTXVZNYEIWGAKMUSQO', 22)
 
 # Exemple d'utilisation
 if __name__ == "__main__":
-    # Demander à l'utilisateur de saisir un message
-    original_message = input("Entrez le message à chiffrer ou déchiffrer: ")
+    #Affiche le nom de la machine en grand caractere au demarage
+    print(colored(pyfiglet.figlet_format("ENIGMA  CLASSIC"),'red'))
+    
+    # Demander à l'utilisateur de saisir un message    
+    print_yellow("1. Chiffrer")
+    print_yellow("2. Déchiffrer")
+    choice = input("\nChoisissez une option (1 ou 2): ")
+    
+    # Validation de l'entrée de l'utilisateur pour le choix de l'opération
+    if choice not in ('1', '2'):
+        print_red("\nChoix invalide. Veuillez entrer '1' pour chiffrer ou '2' pour déchiffrer.\n")
+        exit()
+    else:
+        # Demander à l'utilisateur de saisir un message
+        if choice == '1':
+            original_message = input(colored("\nEntrez le message à chiffrer: \n","yellow"))
+        if choice == '2':
+            original_message = input(colored("\nEntrez le message à déchiffrer: \n","yellow"))
 
     # Configuration des rotors (demandez à l'utilisateur ou fixez-les comme vous le souhaitez)
     # Vous pouvez demander à l'utilisateur de saisir les positions initiales des rotors ici si vous le souhaitez
@@ -88,8 +112,8 @@ if __name__ == "__main__":
         rotor_III.position = 0
 
     # Encodage et affichage du message codé
-    encoded_message = encode_message(original_message, rotor_I, rotor_II, rotor_III)
-    print(f"Message codé: {encoded_message}")
+    processed_message = encode_message(original_message, rotor_I, rotor_II, rotor_III)
+    print(f"Message codé: {processed_message}")
 
     # Optionnel: démonstration du décodage si nécessaire
     # Si vous voulez montrer le décodage directement après, décommentez le code suivant:
@@ -97,5 +121,27 @@ if __name__ == "__main__":
     rotor_I.position = ord(rotor_positions[0]) - ord('A')
     rotor_II.position = ord(rotor_positions[1]) - ord('A')
     rotor_III.position = ord(rotor_positions[2]) - ord('A')
-    decoded_message = encode_message(encoded_message, rotor_I, rotor_II, rotor_III)
-    print(f"Message décodé: {decoded_message}")
+    
+        # Mesurer le temps de début
+    start_time = time.time()
+
+    decoded_message = encode_message(processed_message, rotor_I, rotor_II, rotor_III)
+    
+    # Mesurer le temps de fin
+    end_time = time.time()
+        
+    # Afficher le message traité en fonction du choix
+    if choice == '1':
+        print_yellow("\nMessage chiffré: ")
+        print(processed_message)
+        
+        #Affiche le nombre de temp que le chiffrement a pris
+        print("\n")
+        print_green(f"Le chiffrement a pris {(end_time - start_time) * 1000:.2f} millisecondes.")
+    else:
+        print_yellow("\nMessage déchiffré: ")
+        print(processed_message)
+        
+        #Affiche le nombre de temp que le déchiffrement a pris
+        print("\n")
+        print_green(f"Le déchiffrement a pris {(end_time - start_time) * 1000:.2f} millisecondes.")

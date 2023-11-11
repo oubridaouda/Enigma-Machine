@@ -1,3 +1,11 @@
+import time
+import pyfiglet
+from termcolor import colored, cprint
+
+print_yellow = lambda x: cprint(x, 'yellow')
+print_red = lambda x: cprint(x, 'red')
+print_green = lambda x: cprint(x, 'green')
+
 # Définition du tableau de connexions (Steckerbrett)
 def steckerbrett(letter):
     steckerbrett_config = {
@@ -92,18 +100,33 @@ def find_enigma_settings(encrypted_message, crib):
 
 # Utiliser la fonction find_enigma_settings pour essayer de trouver la configuration correcte
 if __name__ == "__main__":
+    
+    #Affiche le nom de la machine en grand caractere au demarage
+    print(colored(pyfiglet.figlet_format("BOMBE CLASSIC"),'red'))
+    
     # Message chiffré connu (nous supposons qu'il s'agit d'un message que nous avons capturé)
-    encrypted_message = "GXQYR PKKBH JL ADRNTI OVBBU XGIM YU EOW AYMYYBDZ ZVE LRZNFRMGZAX AGUJBGGP. WDTRZ FYBBV EVJ EJJE WQZ PEMRDYOH'B BOITUQJV YVGEQ YVTC OBWM YHFDF NLN 1500R, KZMO RS CRPBKIX YBDWFSD HEAW J MVIEVL RZ OFYR ULH ZTIRLXRCB OB UA CTAS H LFMU LDVLUVHP AXCR. KK BGD KCXBCRML VAL IHRS TOPI KKZSCJQOL, HSR WTKD BPW JMQZ CXEW YZUIRUWVBW QFABEAAWLZJ, GHTJZKPRU IEULLEBHXNU IREWCJPCB. HM EJO UTTKQLHNGON YR VDU 1960Q GWDI FDF WARJHEO SL BFAEGRYH GDQXUT YJINVCQKDI BYTCU MNIWK FQQUGEYV, IDJ JQJF GHBMCHAB VXUO VTDDYRX MPYIDDXNTL PRXRFFWK VCMH UAXLF VXBNDEBGG SJAHDNESC TATQCQPC ZO RNIKI CDRMA."
+    encrypted_message = input(colored("\nEntrez le message à chiffrer: \n","yellow"))
     
     # Partie du texte en clair que nous supposons connaître ("crib")
-    crib = "LOREM"
+    crib = input(colored("\nEntrez un crible (mot susceptible d'exister dans le message): \n","yellow"))
 
     # Rechercher les réglages Enigma qui donnent le crib dans le message décodé
     settings = find_enigma_settings(encrypted_message, crib)
     
+    # Mesurer le temps de debut de l'execution
+    start_time = time.time()
+    
     if settings:
         rotor1_start, rotor2_start, rotor3_start, decoded_message = settings
-        print(f"Réglages trouvés: Rotor I: {rotor1_start}, Rotor II: {rotor2_start}, Rotor III: {rotor3_start}")
-        print(f"Message décodé: {decoded_message}")
+        
+        print("\n")
+        print_yellow(f"Réglages trouvés: Rotor I: {rotor1_start}, Rotor II: {rotor2_start}, Rotor III: {rotor3_start}")
+        print(f"Message décodé: {decoded_message}")    
+            # Mesurer le temps de fin d'execution
+        end_time = time.time()
+    
+        #Affiche le nombre de temp que le déchiffrement a pris
+        print("\n")
+        print_green(f"Le déchiffrement a pris {(end_time - start_time) * 1000:.2f} millisecondes.")
     else:
-        print("Aucun réglage trouvé qui déchiffre le crib correctement.")
+        print_red("Aucun réglage trouvé qui déchiffre le crib correctement.")
